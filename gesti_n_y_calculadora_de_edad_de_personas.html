@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión y Cálculo de Edad</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 p-4 sm:p-6 lg:p-8">
+
+    <div class="max-w-5xl mx-auto space-y-8">
+        
+        <!-- Header -->
+        <header class="text-center space-y-2">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-100 text-indigo-600 text-3xl mb-1 shadow-inner">
+                <i class="fa-solid fa-users-gear"></i>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">
+                Sistema de Registro y Clasificación de Edad
+            </h1>
+            <p class="text-slate-500 text-sm sm:text-base max-w-xl mx-auto">
+                Implementación exacta de los algoritmos de ordenamiento, clasificación y control de duplicados de tu cuaderno.
+            </p>
+        </header>
+
+        <!-- Main Grid Container -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- SECTION 1: Formulario de Registro (Imagen 3 del Cuaderno) -->
+            <section class="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 card-shadow space-y-6">
+                <div>
+                    <span class="inline-block px-3 py-1 bg-indigo-50 text-indigo-700 font-semibold text-xs rounded-full mb-2">
+                        Algoritmo 1 (Imagen 3)
+                    </span>
+                    <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-user-plus text-indigo-600"></i> Registrar Persona
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">
+                        Verifica automáticamente si la persona ya existe antes de guardarla.
+                    </p>
+                </div>
+
+                <!-- Alert Messages Container -->
+                <div id="alert-box" class="hidden p-4 rounded-xl text-xs font-medium flex items-center gap-3 transition-all duration-300">
+                    <i id="alert-icon" class="fa-solid text-base"></i>
+                    <span id="alert-text"></span>
+                </div>
+
+                <form id="person-form" class="space-y-4" onsubmit="return false;">
+                    <!-- Nombre Completo -->
+                    <div>
+                        <label for="person-name" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                            Nombre de la Persona
+                        </label>
+                        <input type="text" id="person-name" placeholder="Ej. Carlos Mendoza" 
+                               class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all">
+                    </div>
+
+                    <!-- Fecha de Nacimiento -->
+                    <div>
+                        <label for="person-dob" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                            Fecha de Nacimiento
+                        </label>
+                        <input type="date" id="person-dob" 
+                               class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="button" id="btn-register"
+                            class="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold py-3.5 px-4 rounded-xl shadow-sm transition-all duration-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Guardar Persona</span>
+                    </button>
+                </form>
+
+                <hr class="border-slate-100">
+
+                <div class="flex items-center justify-between pt-1">
+                    <button id="btn-demo-data" type="button" class="text-xs font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-database"></i> Cargar Datos de Prueba
+                    </button>
+                    <button id="btn-clear-all" type="button" class="text-xs font-medium text-rose-500 hover:text-rose-700 flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-trash-can"></i> Vaciar Lista
+                    </button>
+                </div>
+            </section>
+
+            <!-- SECTION 2 & 3: Listado, Ordenamiento y Clasificación (Imágenes 1 y 2) -->
+            <section class="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 card-shadow space-y-6">
+                
+                <!-- View Tabs -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-100">
+                    <div class="flex bg-slate-100 p-1 rounded-xl">
+                        <button id="tab-all" class="px-4 py-2 rounded-lg text-xs font-semibold text-indigo-700 bg-white shadow-sm transition-all">
+                            Todas las Personas (<span id="count-all">0</span>)
+                        </button>
+                        <button id="tab-classified" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all">
+                            Clasificación Mayores/Menores
+                        </button>
+                    </div>
+
+                    <!-- Sort Button (Imagen 1) -->
+                    <button id="btn-sort" type="button" 
+                            class="inline-flex items-center justify-center gap-2 px-3.5 py-2 bg-slate-50 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 rounded-xl text-xs font-semibold transition-all">
+                        <i class="fa-solid fa-arrow-up-wide-short text-indigo-600"></i>
+                        <span>Ordenar por Nacimiento (Asc)</span>
+                    </button>
+                </div>
+
+                <!-- VIEW 1: Lista Ordenable (Imagen 1 del Cuaderno) -->
+                <div id="view-all-persons" class="space-y-4">
+                    <div id="list-all-container" class="space-y-3">
+                        <!-- Dynamic items will be injected here -->
+                    </div>
+                </div>
+
+                <!-- VIEW 2: Clasificación Mayores / Menores (Imagen 2 del Cuaderno) -->
+                <div id="view-classified-persons" class="hidden space-y-6">
+                    
+                    <!-- Grupo 1: Mayores de Edad -->
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2 text-emerald-700 bg-emerald-50 px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border border-emerald-100">
+                            <i class="fa-solid fa-user-shield"></i>
+                            <span>Personas Mayores de Edad (>= 18 años)</span>
+                            <span id="count-mayores" class="ml-auto bg-emerald-200/80 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-extrabold">0</span>
+                        </div>
+                        <div id="list-mayores-container" class="space-y-2">
+                            <!-- Items inserted dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Grupo 2: Menores de Edad -->
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2 text-amber-700 bg-amber-50 px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border border-amber-100">
+                            <i class="fa-solid fa-child"></i>
+                            <span>Personas Menores de Edad (< 18 años)</span>
+                            <span id="count-menores" class="ml-auto bg-amber-200/80 text-amber-800 text-xs px-2 py-0.5 rounded-full font-extrabold">0</span>
+                        </div>
+                        <div id="list-menores-container" class="space-y-2">
+                            <!-- Items inserted dynamically -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Array principal (lista_de_Personas)
+            let lista_de_Personas = [];
+
+            // UI Elements
+            const inputName = document.getElementById('person-name');
+            const inputDob = document.getElementById('person-dob');
+            const btnRegister = document.getElementById('btn-register');
+            const btnSort = document.getElementById('btn-sort');
+            const btnDemoData = document.getElementById('btn-demo-data');
+            const btnClearAll = document.getElementById('btn-clear-all');
+
+            const alertBox = document.getElementById('alert-box');
+            const alertIcon = document.getElementById('alert-icon');
+            const alertText = document.getElementById('alert-text');
+
+            const tabAll = document.getElementById('tab-all');
+            const tabClassified = document.getElementById('tab-classified');
+            const viewAllPersons = document.getElementById('view-all-persons');
+            const viewClassifiedPersons = document.getElementById('view-classified-persons');
+
+            const listAllContainer = document.getElementById('list-all-container');
+            const listMayoresContainer = document.getElementById('list-mayores-container');
+            const listMenoresContainer = document.getElementById('list-menores-container');
+
+            const countAll = document.getElementById('count-all');
+            const countMayores = document.getElementById('count-mayores');
+            const countMenores = document.getElementById('count-menores');
+
+            // Maximum date allowed: today
+            const todayStr = new Date().toISOString().split('T')[0];
+            inputDob.setAttribute('max', todayStr);
+
+            // ==========================================
+            // FUNCIÓN: Calcular Edad Exacta en Años, Meses, Días
+            // ==========================================
+            function calcularEdad(fechaNacimientoStr) {
+                const nac = new Date(fechaNacimientoStr + 'T00:00:00');
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+
+                let anos = hoy.getFullYear() - nac.getFullYear();
+                let meses = hoy.getMonth() - nac.getMonth();
+                let dias = hoy.getDate() - nac.getDate();
+
+                if (dias < 0) {
+                    meses--;
+                    const prevMonth = new Date(hoy.getFullYear(), hoy.getMonth(), 0);
+                    dias += prevMonth.getDate();
+                }
+
+                if (meses < 0) {
+                    anos--;
+                    meses += 12;
+                }
+
+                return { anos, meses, dias };
+            }
+
+            // ==========================================
+            // ALGORITMO 1: Registro y Verificación de Duplicados (Imagen 3)
+            // ==========================================
+            function registrarPersona() {
+                const nombre = inputName.value.trim();
+                const fechaNacimiento = inputDob.value;
+
+                if (!nombre || !fechaNacimiento) {
+                    showAlert('Por favor completa todos los campos del formulario.', 'error');
+                    return;
+                }
+
+                // Variable 'duplicada <- FALSO'
+                let duplicada = false;
+
+                // PARA cada persona en lista_de_Personas HACER
+                for (let i = 0; i < lista_de_Personas.length; i++) {
+                    const p = lista_de_Personas[i];
+                    // SI persona.nombre = nombre_nueva_persona Y persona.fecha_nacimiento = fecha_nacimiento_nueva_persona
+                    if (p.nombre.toLowerCase() === nombre.toLowerCase() && p.fechaNacimiento === fechaNacimiento) {
+                        duplicada = true;
+                        break;
+                    }
+                }
+
+                // SI duplicada = VERDADERO ENTONCES
+                if (duplicada) {
+                    showAlert('La persona ya está registrada en el sistema', 'error');
+                } else {
+                    // SINO: Guardar
+                    lista_de_Personas.push({
+                        id: Date.now(),
+                        nombre: nombre,
+                        fechaNacimiento: fechaNacimiento
+                    });
+                    showAlert('Persona registrada correctamente', 'success');
+                    inputName.value = '';
+                    inputDob.value = '';
+                    actualizarVistas();
+                }
+            }
+
+            // ==========================================
+            // ALGORITMO 2: Ordenar por Fecha Nacimiento Ascendente (Imagen 1)
+            // ==========================================
+            function ordenarListaAscendente() {
+                lista_de_Personas.sort((a, b) => new Date(a.fechaNacimiento) - new Date(b.fechaNacimiento));
+                showAlert('Lista ordenada por fecha de nacimiento ascendente', 'info');
+                actualizarVistas();
+            }
+
+            // ==========================================
+            // ALGORITMO 3: Clasificación Mayores/Menores (Imagen 2)
+            // ==========================================
+            function renderizarListas() {
+                // Actualizar contadores
+                countAll.textContent = lista_de_Personas.length;
+
+                if (lista_de_Personas.length === 0) {
+                    const emptyState = `
+                        <div class="text-center py-10 border-2 border-dashed border-slate-200 rounded-2xl p-6">
+                            <i class="fa-solid fa-users text-slate-300 text-3xl mb-2"></i>
+                            <p class="text-sm font-semibold text-slate-500">No hay personas registradas</p>
+                            <p class="text-xs text-slate-400 mt-1">Ingresa una nueva persona o carga los datos de prueba.</p>
+                        </div>
+                    `;
+                    listAllContainer.innerHTML = emptyState;
+                    listMayoresContainer.innerHTML = '<p class="text-xs text-slate-400 italic py-2">Sin registros</p>';
+                    listMenoresContainer.innerHTML = '<p class="text-xs text-slate-400 italic py-2">Sin registros</p>';
+                    countMayores.textContent = '0';
+                    countMenores.textContent = '0';
+                    return;
+                }
+
+                // Render Vista Completa
+                listAllContainer.innerHTML = '';
+                lista_de_Personas.forEach(p => {
+                    const edad = calcularEdad(p.fechaNacimiento);
+                    listAllContainer.appendChild(crearTarjetaPersona(p, edad));
+                });
+
+                // Clasificación Mayores/Menores (Imagen 2)
+                const lista_mayores = [];
+                const lista_menores = [];
+
+                lista_de_Personas.forEach(p => {
+                    const edad = calcularEdad(p.fechaNacimiento);
+                    if (edad.anos >= 18) {
+                        lista_mayores.push({ persona: p, edad });
+                    } else {
+                        lista_menores.push({ persona: p, edad });
+                    }
+                });
+
+                // Render Mayores
+                countMayores.textContent = lista_mayores.length;
+                listMayoresContainer.innerHTML = '';
+                if (lista_mayores.length === 0) {
+                    listMayoresContainer.innerHTML = '<p class="text-xs text-slate-400 italic py-2">No hay personas mayores de edad</p>';
+                } else {
+                    lista_mayores.forEach(item => {
+                        listMayoresContainer.appendChild(crearTarjetaPersona(item.persona, item.edad, 'mayor'));
+                    });
+                }
+
+                // Render Menores
+                countMenores.textContent = lista_menores.length;
+                listMenoresContainer.innerHTML = '';
+                if (lista_menores.length === 0) {
+                    listMenoresContainer.innerHTML = '<p class="text-xs text-slate-400 italic py-2">No hay personas menores de edad</p>';
+                } else {
+                    lista_menores.forEach(item => {
+                        listMenoresContainer.appendChild(crearTarjetaPersona(item.persona, item.edad, 'menor'));
+                    });
+                }
+            }
+
+            // Componente Helper de Tarjetas
+            function crearTarjetaPersona(persona, edad, tipo = 'normal') {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-50 border border-slate-200/80 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-100/60 transition-all';
+
+                const isAdult = edad.anos >= 18;
+                const badgeColor = isAdult ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800';
+                const badgeText = isAdult ? 'Mayor de Edad' : 'Menor de Edad';
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm ${isAdult ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}">
+                            ${persona.nombre.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm">${persona.nombre}</h3>
+                            <p class="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
+                                <span><i class="fa-regular fa-calendar-days text-slate-400"></i> ${persona.fechaNacimiento}</span>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${badgeColor}">${badgeText}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200/60">
+                        <div class="text-right">
+                            <div class="text-xs sm:text-sm font-extrabold text-indigo-600">
+                                ${edad.anos}a, ${edad.meses}m, ${edad.dias}d
+                            </div>
+                            <div class="text-[10px] text-slate-400 font-medium">Edad exacta</div>
+                        </div>
+                        <button onclick="eliminarPersona(${persona.id})" class="text-slate-400 hover:text-rose-600 p-2 text-xs transition-colors" title="Eliminar">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+                return card;
+            }
+
+            window.eliminarPersona = function(id) {
+                lista_de_Personas = lista_de_Personas.filter(p => p.id !== id);
+                actualizarVistas();
+                showAlert('Persona eliminada de la lista', 'info');
+            };
+
+            function actualizarVistas() {
+                renderizarListas();
+            }
+
+            // Datos de prueba iniciales
+            function cargarDatosPrueba() {
+                lista_de_Personas = [
+                    { id: 1, nombre: "Sofía Rodríguez", fechaNacimiento: "2010-08-14" },
+                    { id: 2, nombre: "Juan Pablo Gómez", fechaNacimiento: "1995-03-22" },
+                    { id: 3, nombre: "Mateo Fernández", fechaNacimiento: "2018-11-05" },
+                    { id: 4, nombre: "Carolina Martínez", fechaNacimiento: "2002-01-30" }
+                ];
+                actualizarVistas();
+                showAlert('Datos de prueba cargados correctamente', 'success');
+            }
+
+            // Avisos dinámicos
+            function showAlert(msg, type) {
+                alertText.textContent = msg;
+                alertBox.classList.remove('hidden', 'bg-rose-50', 'text-rose-700', 'border-rose-200', 'bg-emerald-50', 'text-emerald-700', 'border-emerald-200', 'bg-indigo-50', 'text-indigo-700', 'border-indigo-200');
+
+                if (type === 'error') {
+                    alertBox.classList.add('bg-rose-50', 'text-rose-700', 'border', 'border-rose-200');
+                    alertIcon.className = 'fa-solid fa-triangle-exclamation text-rose-500';
+                } else if (type === 'success') {
+                    alertBox.classList.add('bg-emerald-50', 'text-emerald-700', 'border', 'border-emerald-200');
+                    alertIcon.className = 'fa-solid fa-circle-check text-emerald-500';
+                } else {
+                    alertBox.classList.add('bg-indigo-50', 'text-indigo-700', 'border', 'border-indigo-200');
+                    alertIcon.className = 'fa-solid fa-circle-info text-indigo-500';
+                }
+
+                setTimeout(() => {
+                    alertBox.classList.add('hidden');
+                }, 4000);
+            }
+
+            // Event Listeners
+            btnRegister.addEventListener('click', registrarPersona);
+            btnSort.addEventListener('click', ordenarListaAscendente);
+            btnDemoData.addEventListener('click', cargarDatosPrueba);
+            
+            btnClearAll.addEventListener('click', () => {
+                lista_de_Personas = [];
+                actualizarVistas();
+                showAlert('Se ha vaciado la lista de personas', 'info');
+            });
+
+            // Tab toggling
+            tabAll.addEventListener('click', () => {
+                tabAll.className = "px-4 py-2 rounded-lg text-xs font-semibold text-indigo-700 bg-white shadow-sm transition-all";
+                tabClassified.className = "px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
+                viewAllPersons.classList.remove('hidden');
+                viewClassifiedPersons.classList.add('hidden');
+            });
+
+            tabClassified.addEventListener('click', () => {
+                tabClassified.className = "px-4 py-2 rounded-lg text-xs font-semibold text-indigo-700 bg-white shadow-sm transition-all";
+                tabAll.className = "px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
+                viewClassifiedPersons.classList.remove('hidden');
+                viewAllPersons.classList.add('hidden');
+            });
+
+            // Cargar datos por defecto al iniciar
+            cargarDatosPrueba();
+        });
+    </script>
+</body>
+</html>
